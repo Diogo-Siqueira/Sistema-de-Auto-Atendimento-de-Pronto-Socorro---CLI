@@ -18,10 +18,19 @@ public class PilhaAtendimentos {
 
     public void exibirHistorico(){
         NoAtendimento atual = topo;
+
+        System.out.println("====================================");
+        if (atual == null) {
+            System.out.println("Todos ja foram atendidos ou nenhum atendimento foi cadastrado");
+            return;
+        }
+        
+
         while (atual != null) {
             System.out.println("Atendimento: " + atual.dado.id);
             atual = atual.proximo;
         }
+        System.out.println("====================================");
     }
 
 }

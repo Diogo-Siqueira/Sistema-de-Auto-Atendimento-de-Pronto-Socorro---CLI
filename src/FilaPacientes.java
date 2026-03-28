@@ -32,10 +32,12 @@ public class FilaPacientes {
     public void exibirFila(){
         NoPaciente atual = inicio;
 
+        System.out.println("====================================");
         while (atual != null) {
             System.out.println(atual.dado.nome);
             atual = atual.proximo;
         }
+        System.out.println("====================================");
     }
 
 }

@@ -16,12 +16,18 @@ public class ListaPacientes {
     }
 
     public void listar(){
+        
+        if (inicio == null) {
+        System.out.println("Nenhum paciente cadastrado.");
+        return;
+    }
         NoPaciente atual  = inicio;
-
-        while (atual != inicio) {
+        System.out.println("====================================");
+        while (atual != null) {
             atual.dado.exibirDados();
             atual = atual.proximo;
         }
+        System.out.println("====================================");
     }
 
     public Paciente buscarPorId(int id){

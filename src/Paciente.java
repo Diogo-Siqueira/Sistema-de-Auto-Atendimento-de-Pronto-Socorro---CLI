@@ -22,7 +22,7 @@ public class Paciente {
     }
 
     public void exibirDados(){
-        System.out.println("ID: " + idPaciente + "| Nome " + nome + " | Prioridade " + prioridade);
+        System.out.println("ID: " + idPaciente + "| Nome: " + nome + " | Prioridade " + prioridade);
     }
 
     public String prioridadeToString(){
