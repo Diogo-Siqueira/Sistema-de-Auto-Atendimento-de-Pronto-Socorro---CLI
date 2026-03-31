@@ -3,10 +3,11 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-        UnidadeAtendimento ua = new UnidadeAtendimento();
 
         int opcao;
-        Atendimento atual = null;
+        int qtdMedicos = 3; // ou pedir via input
+        UnidadeAtendimento ua = new UnidadeAtendimento(qtdMedicos);
+        Atendimento[] atendimentosAtivos = new Atendimento[qtdMedicos];
 
         do{
             System.out.println("\n1 - Cadastrar Paciente");
@@ -16,6 +17,11 @@ public class App {
             System.out.println("5 - Chamar próximo");
             System.out.println("6 - Finalizar atendimento");
             System.out.println("7 - Histórico");
+            System.out.println("8 - Exibir ordem de atendimento");
+            System.out.println("9 - Ver prontuário atual");
+            System.out.println("10 - Próximo prontuário");
+            System.out.println("11 - Prontuário anterior");
+            System.out.println("12 - Ver atendimentos em andamento");
             System.out.println("0 - Sair");
 
             opcao = sc.nextInt();
@@ -61,19 +67,98 @@ public class App {
                     break;
 
                 case 4:
-                    ua.fila.exibirFila();
+                    ua.exibirFilaGeral();
                     break;
 
                 case 5:
-                    atual = ua.chamarProximo();
+                    boolean temEspaco = false;
+
+                    for (int i = 0; i < atendimentosAtivos.length; i++) {
+                        if (atendimentosAtivos[i] == null) {
+                            temEspaco = true;
+                            break;
+                        }
+                    }
+
+                    if (!temEspaco) {
+                        System.out.println("Todos os médicos estão ocupados!");
+                        break;
+                    }
+
+                    Atendimento novo = ua.chamarProximo();
+
+                    if (novo != null) {
+                        for (int i = 0; i < atendimentosAtivos.length; i++) {
+                            if (atendimentosAtivos[i] == null) {
+                                atendimentosAtivos[i] = novo;
+                                break;
+                            }
+                        }
+                    }
                     break;
 
                 case 6:
-                    ua.finalizarAtendimento(atual);
+                    System.out.println("Digite o ID do atendimento para finalizar:");
+                    int idFinalizar = sc.nextInt();
+
+                    boolean encontrou = false;
+
+                    for (int i = 0; i < atendimentosAtivos.length; i++) {
+                        if (atendimentosAtivos[i] != null &&
+                            atendimentosAtivos[i].id == idFinalizar) {
+
+                            ua.finalizarAtendimento(atendimentosAtivos[i]);
+                            atendimentosAtivos[i] = null;
+                            encontrou = true;
+                            break;
+                        }
+                    }
+
+                    if (!encontrou) {
+                        System.out.println("Atendimento não encontrado!");
+                    }
                     break;
 
                 case 7:
                     ua.historico.exibirHistorico();
+                    break;
+
+                case 8:
+                    ua.atendimentosDoDia.exibirOrdem();
+                    break;
+
+                case 9:
+                    ua.prontuarios.exibirAtual();
+                    break;
+
+                case 10:
+                    ua.prontuarios.proximo();
+                    break;
+
+                case 11:
+                    ua.prontuarios.anterior();
+                    break;
+
+                case 12:
+                    System.out.println("=== ATENDIMENTOS EM ANDAMENTO ===");
+
+                    boolean vazio = true;
+
+                    for (Atendimento a : atendimentosAtivos) {
+                        if (a != null) {
+                           System.out.println(
+                                "ID: " + a.id +
+                                " | Paciente: " + a.paciente.nome +
+                                " | Médico: " + a.medico.nome +
+                                " | Sintoma: " + a.paciente.sintomas
+                            );
+                            vazio = false;
+                        }
+                    }
+
+                    if (vazio) {
+                        System.out.println("Nenhum atendimento em andamento.");
+                    }
                     break;
             }
 

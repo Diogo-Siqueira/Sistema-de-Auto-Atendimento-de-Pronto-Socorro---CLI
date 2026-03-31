@@ -27,7 +27,15 @@ public class PilhaAtendimentos {
         
 
         while (atual != null) {
-            System.out.println("Atendimento: " + atual.dado.id);
+            Atendimento a = atual.dado;
+
+            System.out.println(
+                "ID: " + a.id +
+                " | Paciente: " + a.paciente.nome +
+                " | Sintomas" +
+                " | Médico: " + a.medico.nome
+            );
+
             atual = atual.proximo;
         }
         System.out.println("====================================");
