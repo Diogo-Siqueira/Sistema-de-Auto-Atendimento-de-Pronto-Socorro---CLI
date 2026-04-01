@@ -25,6 +25,7 @@ public class ListaAtendimentos {
         while (atual != null) {
             System.out.println(
                 "ID: " + atual.dado.id +
+                "ID do Paciente: " + atual.dado.paciente.idPaciente +
                 " | Paciente: " + atual.dado.paciente.nome
             );
             atual = atual.proximo;

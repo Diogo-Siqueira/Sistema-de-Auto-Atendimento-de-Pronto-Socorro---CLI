@@ -29,11 +29,52 @@ public class UnidadeAtendimento {
         pacientes.listar();
     }
 
+    public void registrarChegada(int idPaciente, int novaPrioridade) {
+        Paciente p = pacientes.buscarPorId(idPaciente);
+
+        if (p == null) {
+            System.out.println("Paciente não encontrado.");
+            return;
+        }
+
+        if (p.statusAtendimento != null &&
+            (p.statusAtendimento.equals("Na fila") ||
+            p.statusAtendimento.equals("Em atendimento"))) {
+
+            System.out.println("Paciente já está em atendimento ou na fila!");
+            return;
+        }
+
+        p.prioridade = novaPrioridade;
+
+        if (p.prioridade == 3) {
+            filaAlta.enfileirar(p);
+        } else if (p.prioridade == 2) {
+            filaMedia.enfileirar(p);
+        } else {
+            filaBaixa.enfileirar(p);
+        }
+
+        p.statusAtendimento = "Na fila";
+
+        System.out.println(p.nome + " entrou na fila com nova prioridade!");
+    }
+
     public void registrarChegada(int idPaciente) {
     Paciente p = pacientes.buscarPorId(idPaciente);
 
     if (p == null) {
         System.out.println("Paciente não encontrado.");
+        return;
+    }
+
+    if (p.statusAtendimento != null && p.statusAtendimento.equals("Na fila")) {
+        System.out.println("Paciente já está na fila!");
+        return;
+    }
+
+    if (p.statusAtendimento != null && p.statusAtendimento.equals("Em atendimento")) {
+        System.out.println("Paciente já está em atendimento!");
         return;
     }
 
@@ -45,8 +86,10 @@ public class UnidadeAtendimento {
         filaBaixa.enfileirar(p);
     }
 
+    p.statusAtendimento = "Na fila";
+
     System.out.println(p.nome + " entrou na fila!");
-    }
+}
 
     public Atendimento chamarProximo() {
     Medico medico = medicos.getDisponivel();
@@ -93,22 +136,25 @@ public class UnidadeAtendimento {
         filaBaixa.exibirFila();
     }
 
-    public void finalizarAtendimento(Atendimento a) {
-    if (a != null) {
-        a.finalizar();
+   public void finalizarAtendimento(Atendimento a, String diagnostico, String medicamento) {
+        if (a != null) {
+            a.finalizar();
 
-        historico.push(a);
-        atendimentosDoDia.adicionar(a);
+            historico.push(a);
+            atendimentosDoDia.adicionar(a);
 
-        a.paciente.statusAtendimento = "Finalizado";
+            a.paciente.statusAtendimento = "Finalizado";
 
-        Prontuario p = new Prontuario(contadorProntuario++, a.paciente);
-        prontuarios.adicionar(p);
+            Prontuario p = new Prontuario(contadorProntuario++, a.paciente);
+            p.registrarDiagnostico(diagnostico);
+            p.adicionarMedicamento(medicamento);
 
-        System.out.println("Adicionando atendimento ID: " + a.id + " na lista do dia");
-    } else {
-        System.out.println("Nenhum atendimento em andamento.");
+            prontuarios.adicionar(p);
+
+            System.out.println("Atendimento finalizado e prontuário criado!");
+        } else {
+            System.out.println("Nenhum atendimento em andamento.");
+        }
     }
-}
 
 }

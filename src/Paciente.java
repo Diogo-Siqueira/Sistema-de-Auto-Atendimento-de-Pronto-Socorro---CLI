@@ -8,6 +8,7 @@ public class Paciente {
     int prioridade;
     String sintomas;
     String statusAtendimento;
+    
 
 
     public Paciente(String nome, int idade, String cpf, int prioridade, String sintomas) {

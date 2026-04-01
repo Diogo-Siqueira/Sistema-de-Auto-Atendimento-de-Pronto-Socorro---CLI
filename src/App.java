@@ -5,7 +5,7 @@ public class App {
         Scanner sc = new Scanner(System.in);
 
         int opcao;
-        int qtdMedicos = 3; // ou pedir via input
+        int qtdMedicos = 3; // pode mudar
         UnidadeAtendimento ua = new UnidadeAtendimento(qtdMedicos);
         Atendimento[] atendimentosAtivos = new Atendimento[qtdMedicos];
 
@@ -39,17 +39,10 @@ public class App {
                     System.out.print("CPF: ");
                     String cpf = sc.nextLine();
 
-                   int prioridade;
-                    do {
-                        System.out.print("Prioridade (baixa(1), media(2), alta(3)): ");
-                        prioridade = sc.nextInt();
-                    } while (prioridade < 1 || prioridade > 3);
-                    sc.nextLine();
-
                     System.out.print("Sintomas: ");
                     String sintomas = sc.nextLine();
 
-                    Paciente p = new Paciente(nome, idade, cpf, prioridade, sintomas);
+                    Paciente p = new Paciente(nome, idade, cpf, 0, sintomas);
                     ua.cadastrarPaciente(p);
 
                     System.out.println("Paciente cadastrado com ID: " + p.idPaciente);
@@ -63,7 +56,14 @@ public class App {
                 case 3:
                     System.out.print("ID do paciente: ");
                     int idBusca = sc.nextInt();
-                    ua.registrarChegada(idBusca);
+
+                    int prioridade_case;
+                    do {
+                        System.out.print("Nova prioridade (1-baixa, 2-media, 3-alta): ");
+                        prioridade_case = sc.nextInt();
+                    } while (prioridade_case < 1 || prioridade_case > 3);
+
+                    ua.registrarChegada(idBusca, prioridade_case);
                     break;
 
                 case 4:
@@ -100,6 +100,7 @@ public class App {
                 case 6:
                     System.out.println("Digite o ID do atendimento para finalizar:");
                     int idFinalizar = sc.nextInt();
+                    sc.nextLine(); 
 
                     boolean encontrou = false;
 
@@ -107,7 +108,15 @@ public class App {
                         if (atendimentosAtivos[i] != null &&
                             atendimentosAtivos[i].id == idFinalizar) {
 
-                            ua.finalizarAtendimento(atendimentosAtivos[i]);
+
+                            System.out.print("Diagnóstico: ");
+                            String diagnostico = sc.nextLine();
+
+                            System.out.print("Medicamento: ");
+                            String medicamento = sc.nextLine();
+
+                            ua.finalizarAtendimento(atendimentosAtivos[i], diagnostico, medicamento);
+
                             atendimentosAtivos[i] = null;
                             encontrou = true;
                             break;
